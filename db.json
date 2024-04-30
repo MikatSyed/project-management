@@ -1,0 +1,70 @@
+{
+  "projects": [
+    {
+      "id": "1",
+      "title": "Project A",
+      "description": "Description of Project A",
+      "tasks": [
+        {
+          "id": 101,
+          "title": "Task 1",
+          "description": "Description of Task 1",
+          "status": "To Do",
+          "dueDate": "2024-05-05",
+          "assignee": "John Doe"
+        },
+        {
+          "id": 102,
+          "title": "Task 2",
+          "description": "Description of Task 2",
+          "status": "In Progress",
+          "dueDate": "2024-05-10",
+          "assignee": "Jane Smith"
+        }
+      ],
+      "teamMembers": [
+        "John Doe",
+        "Jane Smith",
+        "Alex Johnson"
+      ],
+      "recentActivities": [
+        {
+          "id": 201,
+          "description": "John Doe added Task 1 to Project A",
+          "timestamp": "2024-04-25T10:30:00"
+        },
+        {
+          "id": 202,
+          "description": "Jane Smith completed Task 2 in Project A",
+          "timestamp": "2024-04-28T15:45:00"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Project B",
+      "description": "Description of Project B",
+      "tasks": [
+        {
+          "id": 103,
+          "title": "Task 1",
+          "description": "Description of Task 1",
+          "status": "Done",
+          "dueDate": "2024-04-20",
+          "assignee": "Alex Johnson"
+        }
+      ],
+      "teamMembers": [
+        "Alex Johnson",
+        "Emma Brown"
+      ],
+      "recentActivities": [
+        {
+          "id": 203,
+          "description": "Task 1 completed in Project B",
+          "timestamp": "2024-04-20T12:00:00"
+        }
+      ]
+    }
+  ]
+}
