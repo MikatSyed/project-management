@@ -3,16 +3,15 @@ import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { FaPlus } from 'react-icons/fa';
 import Link from 'next/link';
- // Import the component for adding new tasks
- import { FaBookmark } from "react-icons/fa6";
  import { CiBookmark } from "react-icons/ci";
-import { FiClock, FiDelete, FiUser } from 'react-icons/fi';
+import { FiClock, FiUser } from 'react-icons/fi';
 import { BiEditAlt } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import ActionBar from '@/components/UI/ActionBar';
 import { message } from 'antd';
 import TaskModal from '@/components/UI/TaskModal';
 import { useTaskStore } from '@/stores/taskStore';
+
  type IDProps = {
     params: any;
   };
@@ -141,24 +140,18 @@ const ProjectDetailsPage = ({params}:IDProps) => {
       </div>
     
   </div>
-</div>     {/* <div className="absolute top-2 right-2">
-                {task.isComplete ? (
-                  <CiBookmark size={24} className="text-green-500" />
-                ) : (
-                  <CiBookmark size={24} className="text-gray-500" />
-                )}
-              </div> */}
+</div>    
               <div className="flex justify-between">
-             {/* <div>   <p className="text-gray-500 text-sm"><FiClock  />  Due Date : {task.dueDate}</p></div> */}
+           
              <div className="flex items-center py-4">
                 <FiClock className="mr-1" />
                 <p className="text-gray-500 text-sm">Due Date : {task.dueDate}</p>
               </div>
              <div>   
-                <Link href={`/task/${task._id}`}>
-                  <button className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-3 py-1 rounded-md mr-3"><BiEditAlt/></button>
+                <Link href={`/dashboard/project/task/${task.id}`}>
+                  <button className="rounded-md bg-[#1e3d9c] text-white px-4 py-2 font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3 border-none"><BiEditAlt/></button>
                 </Link>
-                <button className="bg-red-600 text-white px-3 py-1 rounded-md"><MdDelete/></button></div>
+                <button className="rounded-md bg-red-500 text-white px-4 py-2 font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 border-none"><MdDelete/></button></div>
               </div>
             </div>
           ))}
@@ -194,6 +187,8 @@ const ProjectDetailsPage = ({params}:IDProps) => {
 </div>
       </div>
     </div>
+
+
     </>
    
   );

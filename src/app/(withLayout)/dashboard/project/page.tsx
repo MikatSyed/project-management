@@ -30,6 +30,7 @@ const ManageDepartmentPage = () => {
   const { isLoading, isError, data, error }:any = useQuery('projects', fetchData);
   console.log(data,'30');
 
+  
   if (isLoading) {
     return <div>Loading...</div>;
   }

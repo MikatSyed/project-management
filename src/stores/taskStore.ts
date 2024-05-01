@@ -5,7 +5,7 @@ interface Task {
   id: number;
   title: string;
   description: string;
-  status: string;
+  status: string; // "To Do", "In Progress", "Done"
   dueDate: string;
   member: string;
   serviceId: number;
@@ -15,6 +15,7 @@ interface Task {
 interface TaskState {
   tasks: Task[];
   addTask: (newTask: Task) => void;
+  updateTask: (taskId: number, updatedTask: Task) => void; // Function to update a task
 }
 
 // Function to get the next available ID
@@ -23,26 +24,34 @@ const getNextId = (tasks: Task[]) => {
   return maxId + 1;
 };
 
-// Load tasks from local storage
+// Load tasks from local storage (optional)
 const loadTasksFromLocalStorage = (): Task[] => {
   const tasksJson = localStorage.getItem('tasks');
   return tasksJson ? JSON.parse(tasksJson) : [];
 };
 
-// Save tasks to local storage
+// Save tasks to local storage (optional)
 const saveTasksToLocalStorage = (tasks: Task[]) => {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
 // Create the Zustand store
 export const useTaskStore = create<TaskState>((set) => ({
-  tasks: loadTasksFromLocalStorage(), // Load tasks from local storage
+  tasks: loadTasksFromLocalStorage(), // Load tasks from local storage (optional)
   addTask: (newTask) =>
     set((state) => {
-      const id = state.tasks.length === 0 ? 0 : getNextId(state.tasks);
+      const id = state.tasks.length === 0 ? 1 : getNextId(state.tasks);
       const updatedTask = { ...newTask, id };
       const updatedTasks = [...state.tasks, updatedTask];
-      saveTasksToLocalStorage(updatedTasks); // Save tasks to local storage
+      saveTasksToLocalStorage(updatedTasks); // Save tasks to local storage (optional)
+      return { tasks: updatedTasks };
+    }),
+  updateTask: (taskId, updatedTask) =>
+    set((state) => {
+      const updatedTasks = state.tasks.map((task) =>
+        task.id === taskId ? { ...task, ...updatedTask } : task
+      );
+      saveTasksToLocalStorage(updatedTasks); // Save tasks to local storage (optional)
       return { tasks: updatedTasks };
     }),
 }));
