@@ -23,7 +23,7 @@ const TaskModal: React.FC<{
   console.log(tasks,'30');
 
   const onSubmit = async (values: any) => {
-    const newTask = { ...values, status: 'To Do',serviceId:{id} };
+    const newTask = { ...values, status: 'To Do',serviceId:{id},isCompleted:false };
 
     try {
       addTask(newTask); // Add the new task to the store

@@ -9,13 +9,15 @@ interface Task {
   dueDate: string;
   member: string;
   serviceId: number;
+  isCompleted: boolean;
 }
 
 // Define the shape of the state
 interface TaskState {
   tasks: Task[];
   addTask: (newTask: Task) => void;
-  updateTask: (taskId: number, updatedTask: Task) => void; // Function to update a task
+  updateTask: (taskId: number, updatedTask: Task) => void; 
+  toggleIsComplete: (taskId: number) => void;
 }
 
 // Function to get the next available ID
@@ -54,4 +56,12 @@ export const useTaskStore = create<TaskState>((set) => ({
       saveTasksToLocalStorage(updatedTasks); // Save tasks to local storage (optional)
       return { tasks: updatedTasks };
     }),
+  toggleIsComplete: (taskId:any) =>
+      set((state) => {
+        const updatedTasks = state.tasks.map((task) =>
+          task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
+        );
+        saveTasksToLocalStorage(updatedTasks); // Save tasks to local storage (optional)
+        return { tasks: updatedTasks };
+      }),
 }));

@@ -1,16 +1,17 @@
 "use client"
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
-import { FaPlus } from 'react-icons/fa';
+import { FaBookmark, FaPlus } from 'react-icons/fa';
 import Link from 'next/link';
  import { CiBookmark } from "react-icons/ci";
 import { FiClock, FiUser } from 'react-icons/fi';
-import { BiEditAlt } from 'react-icons/bi';
+import { BiBookmark, BiEditAlt } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import ActionBar from '@/components/UI/ActionBar';
 import { message } from 'antd';
 import TaskModal from '@/components/UI/TaskModal';
 import { useTaskStore } from '@/stores/taskStore';
+import { BsFillBookmarkFill } from 'react-icons/bs';
 
  type IDProps = {
     params: any;
@@ -46,6 +47,12 @@ const ProjectDetailsPage = ({params}:IDProps) => {
   if (isError) {
     return <div className="text-center">Error: {error.message}</div>;
   }
+
+
+  const toggleCompletion = (taskId: number) => {
+    console.log(taskId,'53');
+    useTaskStore.getState().toggleIsComplete(taskId);
+  };
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -95,7 +102,7 @@ const ProjectDetailsPage = ({params}:IDProps) => {
         </div>
         <div> 
         
-          <button className="btn bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-lg p-2"  onClick={() => deleteHandler(projectId)}>
+          <button className="btn bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-lg p-3 border-none"  onClick={() => deleteHandler(projectId)}>
           <FaPlus/> Add Task
         </button>
           
@@ -121,9 +128,19 @@ const ProjectDetailsPage = ({params}:IDProps) => {
               <div className="flex justify-between items-center mb-2">
                 <h2 className="text-lg font-semibold text-gray-800">{task.title}</h2>
                 <div className="flex items-center">
-               
-                  {/* <p className="text-gray-500 text-sm">{task.dueDate}</p> */}
-                  <CiBookmark size={24} className="text-gray-500" />
+                {task.isCompleted ? (
+  <FaBookmark 
+    size={24}
+    className="text-gray-500 cursor-pointer"
+    onClick={() => toggleCompletion(task.id)}
+  />
+) : (
+  <BiBookmark
+    size={24}
+    className="text-gray-500 cursor-pointer"
+    onClick={() => toggleCompletion(task.id)}
+  />
+)}
                 </div>
               </div>
               <p className="text-gray-600 mb-2">{task.description}</p>
