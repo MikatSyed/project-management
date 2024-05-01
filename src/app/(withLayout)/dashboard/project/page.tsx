@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { DeleteOutlined, EditOutlined, ReloadOutlined } from "@ant-design/icons";
 import UMTable from "@/components/UI/Table";
 import ActionBar from "@/components/UI/ActionBar";
+import { BsEyeFill } from "react-icons/bs";
 
 const fetchData = async () => {
   const response = await fetch('http://localhost:8000/projects/');
@@ -65,20 +66,19 @@ const ManageDepartmentPage = () => {
       title: "Title",
       dataIndex: "title",
     },
-    {
-      title: "CreatedAt",
-      dataIndex: "createdAt",
-      render: (data: any) => {
-        return data && dayjs(data).format("MMM D, YYYY hh:mm A");
-      },
-      sorter: true,
-    },
+    
     {
       title: "Action",
       render: (data: any) => {
         return (
           <>
+            <Link href={`project/view/${data?.id}`}>
+            <Button style={{ margin: "0px 5px" }} type="primary">
+                <BsEyeFill />
+              </Button>
+            </Link>
             <Link href={`/admin/category/edit/${data?.id}`}>
+             
               <Button style={{ margin: "0px 5px" }} type="primary">
                 <EditOutlined />
               </Button>
