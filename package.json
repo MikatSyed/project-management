@@ -16,10 +16,13 @@
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.51.3",
     "react-icons": "^5.1.0",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/json-server": "^0.14.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

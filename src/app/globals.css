@@ -43,6 +43,7 @@ header .toggle {
 
 .ant-menu-submenu-selected {
   background-color: transparent !important;
+
 }
 .ant-menu-item-selected {
   background-color: initial !important;

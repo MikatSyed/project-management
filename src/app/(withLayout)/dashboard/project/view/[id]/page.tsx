@@ -1,8 +1,7 @@
 "use client"
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { FaPlus } from 'react-icons/fa';
-import TaskForm from '@/components/TaskForm';
 import Link from 'next/link';
  // Import the component for adding new tasks
  import { FaBookmark } from "react-icons/fa6";
@@ -11,12 +10,16 @@ import { FiClock, FiDelete, FiUser } from 'react-icons/fi';
 import { BiEditAlt } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import ActionBar from '@/components/UI/ActionBar';
+import { message } from 'antd';
+import TaskModal from '@/components/UI/TaskModal';
+import { useTaskStore } from '@/stores/taskStore';
  type IDProps = {
     params: any;
   };
 
 
 const fetchProjectDetails = async (id:string) => {
+    
   const response = await fetch(`http://localhost:8000/projects/${id}`);
   console.log(response,'15');
   if (!response.ok) {
@@ -27,8 +30,15 @@ const fetchProjectDetails = async (id:string) => {
 
 const ProjectDetailsPage = ({params}:IDProps) => {
     const {id} = params;
-  const { isLoading, isError, data, error }:any = useQuery(['project', id], () => fetchProjectDetails(id));
-  console.log(data,'24');
+    console.log(typeof id);
+  const { isLoading, isError, data, error }:any = useQuery(['project', id], () => fetchProjectDetails(id))
+  const allTasks = useTaskStore((state) => state.tasks); 
+  console.log(allTasks,'36');// Load all tasks from Zustand store
+
+  // Filter tasks based on projectId
+  const tasks = allTasks.filter((task) => task.serviceId?.id === id);
+  console.log(tasks,'40');
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   if (isLoading) {
     return <div className="text-center">Loading...</div>;
@@ -38,10 +48,46 @@ const ProjectDetailsPage = ({params}:IDProps) => {
     return <div className="text-center">Error: {error.message}</div>;
   }
 
-  const { title, description, tasks, teamMembers, recentActivities } = data;
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const deleteHandler = async (id: string) => {
+    
+    try {
+      showModal()
+    //   setId(id)
+     
+    
+    } catch (err: any) {
+      //   console.error(err.message);
+      message.error(err.message);
+    }
+  };
+  
+  const handleOk = async () => {
+   
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  }
+
+  const { title, description, teamMembers, recentActivities,id:projectId } = data;
+  
+  
+
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
+      <TaskModal
+        title="Add New Task"
+        visible={isModalVisible}
+        onCancel={handleCancel}
+        projectId={projectId}
+      />
+     <div className="container mx-auto px-4 py-8">
       <div className="max-w-3xl mx-auto">
         {/* <h1 className="text-3xl font-semibold mb-4">{title}</h1> */}
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -49,11 +95,11 @@ const ProjectDetailsPage = ({params}:IDProps) => {
           <ActionBar title={title}/>
         </div>
         <div> 
-          <Link href="/admin/category/create">
-          <button className="btn bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-lg p-2">
+        
+          <button className="btn bg-gradient-to-r from-blue-900 to-blue-800 text-white rounded-lg p-2"  onClick={() => deleteHandler(projectId)}>
           <FaPlus/> Add Task
         </button>
-          </Link>
+          
         
         </div>
       </div>
@@ -87,14 +133,13 @@ const ProjectDetailsPage = ({params}:IDProps) => {
     <p><FiUser className="mr-1" /> Member:</p>
   </div>
   <div className="flex flex-wrap ml-2"> {/* Add margin-left for spacing */}
-    {teamMembers.map((member: string, index: number) => (
-      <div key={member} className="flex items-center mr-2 mb-2">
+    
+      <div  className="flex items-center mr-2 mb-2">
         <p className="text-gray-500 text-sm pt-2">
-          {member}
-          {index !== teamMembers.length - 1 && ','} {/* Add comma if not the last member */}
+      {task?.assignee}
         </p>
       </div>
-    ))}
+    
   </div>
 </div>     {/* <div className="absolute top-2 right-2">
                 {task.isComplete ? (
@@ -149,6 +194,8 @@ const ProjectDetailsPage = ({params}:IDProps) => {
 </div>
       </div>
     </div>
+    </>
+   
   );
 };
 
