@@ -30,14 +30,16 @@ const fetchProjectDetails = async (id:string) => {
 
 const ProjectDetailsPage = ({params}:IDProps) => {
     const {id} = params;
-    console.log(typeof id);
+    const [statusFilter, setStatusFilter] = useState('');
+    const [dueDateFilter, setDueDateFilter] = useState('');
+    const [assigneeFilter, setAssigneeFilter] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
   const { isLoading, isError, data, error }:any = useQuery(['project', id], () => fetchProjectDetails(id))
   const allTasks = useTaskStore((state) => state.tasks); 
-  console.log(allTasks,'36');// Load all tasks from Zustand store
+
 
   // Filter tasks based on projectId
   const tasks = allTasks.filter((task) => task.serviceId?.id === id);
-  console.log(tasks,'40');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   if (isLoading) {
@@ -47,7 +49,23 @@ const ProjectDetailsPage = ({params}:IDProps) => {
   if (isError) {
     return <div className="text-center">Error: {error.message}</div>;
   }
+  
 
+  const filteredTasks = tasks.filter((task:any) => {
+
+    if (searchQuery && !task.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+
+    // Filter by status
+    if (statusFilter && task.status !== statusFilter) return false;
+
+    // Filter by due date
+    if (dueDateFilter && task.dueDate !== dueDateFilter) return false;
+
+    // Filter by assignee
+    if (assigneeFilter && task.assignee !== assigneeFilter) return false;
+
+    return true;
+});
 
   const toggleCompletion = (taskId: number) => {
     console.log(taskId,'53');
@@ -112,15 +130,73 @@ const ProjectDetailsPage = ({params}:IDProps) => {
         <p className="text-gray-600 mb-4">{description}</p>
 
         {/* Add Task Form */}
+
+
+        <div className="bg-gradient-to-r from-blue-900 to-blue-800 rounded-lg shadow-md p-6 mb-6">
+                <h2 className="text-lg font-semibold mb-4 text-white">Filters</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Status filter */}
+                    <div>
+                        <label htmlFor="status" className="block text-sm font-medium text-white">Status</label>
+                        <select
+                            id="status"
+                            name="status"
+                            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+                            <option value="">All</option>
+                            <option value="To Do">To Do</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Done">Done</option>
+                        </select>
+                    </div>
+
+                    {/* Due Date filter */}
+                    <div>
+                        <label htmlFor="dueDate" className="block text-sm font-medium text-white">Due Date</label>
+                        <input
+                            type="date"
+                            id="dueDate"
+                            name="dueDate"
+                            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            value={dueDateFilter}
+                            onChange={(e) => setDueDateFilter(e.target.value)}
+                        />
+                    </div>
+
+                    {/* Assignee filter */}
+                    <div>
+                        <label htmlFor="assignee" className="block text-sm font-medium text-white">Assignee</label>
+                        <input
+                            type="text"
+                            id="assignee"
+                            name="assignee"
+                            className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            value={assigneeFilter}
+                            onChange={(e) => setAssigneeFilter(e.target.value)}
+                        />
+                    </div>
+                </div>
+            </div>
    
 
+            <div className="mb-6">
+                <input
+                    type="text"
+                    placeholder="Search tasks..."
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+            </div>
 
         {/* Tasks */}
         <div className="">
       <div className=" mx-auto">
         <h2 className="text-xl font-semibold mb-4">Tasks</h2>
         <div className="">
-          {tasks.map((task: any) => (
+          {filteredTasks.map((task: any) => (
             <div
               key={task._id}
               className="bg-white rounded-lg overflow-hidden shadow-md border border-gray-200 p-6 relative mb-3"
