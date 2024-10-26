@@ -1,77 +1,108 @@
 import React, { useState } from 'react';
-import { Modal, Button, Col } from 'antd';
+import { Modal, Col } from 'antd';
 import { MdOutlineAddTask } from 'react-icons/md';
+import { CgClose } from 'react-icons/cg';
 import FormTextArea from '../Forms/FormTextArea';
 import FormInput from '../Forms/FormInput';
 import Form from '../Forms/Form';
 import FormDatePicker from '../Forms/FormDatePicker';
 import { useTaskStore } from '@/stores/taskStore';
-import { useStore } from 'zustand';
-
 
 const TaskModal: React.FC<{
   title: string;
   visible: boolean;
   onCancel: () => void;
   projectId: string;
-}> = ({ title, visible, onCancel, projectId }) => {
-  const id = projectId;
-  console.log(id,'19');
+  members: string[]; // Accept members as props
+  onTaskAdded: () => void; // Add onTaskAdded prop
+}> = ({ title, visible, onCancel, projectId, members, onTaskAdded }) => {
+  const [assignee, setAssignee] = useState<string>('');
 
-  const addTask = useTaskStore((state) => state.addTask); // Access the addTask function from the store
-  const tasks = useStore(useTaskStore); 
-  console.log(tasks,'30');
+  const addTask = useTaskStore((state) => state.addTask);
 
   const onSubmit = async (values: any) => {
-    const newTask = { ...values, status: 'To Do',serviceId:{id},isCompleted:false };
+    const newTask = {
+      ...values,
+      status: 'To Do',
+      serviceId: projectId,
+      isCompleted: false,
+      member: assignee,
+    };
 
     try {
-      addTask(newTask); // Add the new task to the store
-      onCancel();
+      await addTask(newTask); // Assuming addTask is an async function
+      onTaskAdded(); // Call the onTaskAdded function to refresh tasks
+      onCancel(); // Close the modal after adding the task
     } catch (err: any) {
       console.error('Error adding task:', err.message);
     }
   };
 
-  const handleOk = () => {
-   
-  };
-
-
   return (
     <Modal
       title={
-        <div className='flex items-center'>
-          <MdOutlineAddTask style={{ marginRight: 8, color: 'blue' }} size={22} />
+        <div className="flex items-center text-teal-600 font-semibold text-lg">
+          <MdOutlineAddTask className="mr-2" size={22} />
           {title}
         </div>
       }
       visible={visible}
       onCancel={onCancel}
       footer={null}
-      onOk={handleOk}
+      closeIcon={<CgClose className="text-teal-600 cursor-pointer" size={20} />}
+      bodyStyle={{ padding: '0', borderRadius: '0' }}
+      className="rounded-lg shadow-lg max-w-lg mx-auto overflow-hidden"
     >
-      <Form submitHandler={onSubmit}>
-        <Col md={24} sm={15} xs={20} className="my-2">
-          <FormInput name="title" label="Title" className="w-full" />
-        </Col>
+      <div className="p-6 bg-gray-50 rounded-lg">
+        <Form submitHandler={onSubmit}>
+          <Col md={24} sm={15} xs={20} className="">
+            <FormInput name="title" label="Title" className="w-full" />
+          </Col>
 
-        <Col md={24} sm={15} xs={20} className="my-2">
-          <FormTextArea name="description" label="Description" rows={4} className="w-full" />
-        </Col>
+          <Col md={24} sm={15} xs={20} className="my-3">
+            <FormTextArea
+              name="description"
+              label="Description"
+              rows={4}
+              className="w-full"
+            />
+          </Col>
 
-        <Col md={24} sm={15} xs={20} className="my-2">
-          <FormInput name="assignee" label="Assignee" className="w-full" />
-        </Col>
+          <Col md={24} sm={15} xs={20} className="my-3">
+            <label
+              htmlFor="assignee"
+              className="block text-sm font-medium text-gray-600"
+            >
+              Assignee
+            </label>
+            <select
+              id="assignee"
+              name="assignee"
+              className="mt-2 w-full py-3 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-gray-700"
+              value={assignee}
+              onChange={(e) => setAssignee(e.target.value)}
+            >
+              <option value="">All Assignees</option>
+              {members.map((member: string) => (
+                <option key={member} value={member}>
+                  {member}
+                </option>
+              ))}
+            </select>
+          </Col>
 
-        <Col md={24} sm={15} xs={20} className="my-2">
-          <FormDatePicker name="dueDate" label="Due Date" className="w-full" />
-        </Col>
+          <Col md={24} sm={15} xs={20} className="mt-3">
+            <FormDatePicker name="dueDate" label="Due Date" className="w-full" />
+          </Col>
 
-        <Button htmlType="submit" type="primary" className="mt-4">
-          Add Task
-        </Button>
-      </Form>
+          <button
+            type="submit"
+            className="mt-4 border-none py-3 px-6 rounded-md font-semibold text-white bg-teal-600 hover:bg-teal-700 transition-colors duration-300"
+          >
+            Add Task
+          </button>
+        </Form>
+      </div>
     </Modal>
   );
 };

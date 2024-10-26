@@ -39,16 +39,19 @@ const FormDatePicker: React.FC<FormDatePickerProps> = ({
 
   return (
     <div>
-    {label ? label : null}
-
+     {label ? <div className='block text-sm font-medium'>
+        {label}
+       </div> : null}
       <Controller
         name={name}
+        
         control={control}
         render={({ field }) => (
           <DatePicker
+          size={size}
             value={field.value ? dayjs(field.value) : null}
             onChange={handleOnChange}
-            className={`${className}`}
+            className={`${className} border-gray-300  border-gray-300 focus:border-teal-500 focus:ring-teal-500`}
           />
         )}
       />

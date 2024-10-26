@@ -1,60 +1,46 @@
 import React from 'react';
 import { MdOutlineLegendToggle } from "react-icons/md";
+import { Avatar, Button, Dropdown, Menu } from 'antd';
 
-import { Avatar, Button, Dropdown, MenuProps } from 'antd';
-const HeaderPage = ({ collapsed, onToggleSidebar }: { collapsed: boolean; onToggleSidebar: () => void }) => {
-
-  
+const HeaderPage = ({ collapsed, onToggleSidebar }: any) => {
   const logout = () => {
-   
+    // Implement logout functionality here
   };
 
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: (
+  const menu = (
+    <Menu>
+      <Menu.Item key="1">
         <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
           1st menu item
         </a>
-      ),
-    },
-    {
-      key: '2',
-      label: (
+      </Menu.Item>
+      <Menu.Item key="2">
         <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
           2nd menu item
         </a>
-      ),
-    },
-    {
-      key: '3',
-      label: (
+      </Menu.Item>
+      <Menu.Item key="3">
         <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
           3rd menu item
         </a>
-      ),
-    },
-  ];
-  
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
-    <header style={{ backgroundColor: '#fff', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <div style={{ height: '40px', width: '40px', backgroundColor: '#27ae60', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      {collapsed ? (
-         
-           <MdOutlineLegendToggle onClick={onToggleSidebar} style={{ cursor: 'pointer', color: '#fff' }} size={30} />
-         
-        ) : (
-          <MdOutlineLegendToggle onClick={onToggleSidebar} style={{ cursor: 'pointer', color: '#fff' }} size={30} />
-        )}
-    </div>
-      <div>
-      
-        <p> <span style={{padding:'0px 5px'}}>Mikat</span> </p>
+    <header className="bg-white py-4 px-8 flex justify-between items-center">
+      <div className="h-12 w-12 text-[#008080] flex justify-center items-center rounded-full  transition-colors duration-300 cursor-pointer" onClick={onToggleSidebar}>
+        <MdOutlineLegendToggle size={30} />
+      </div>
+      <div className="flex items-center">
+        
+      <button 
+  onClick={logout} 
+  className="py-3 px-6 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg border-none "
+>
+  Logout
+</button>
 
-        {/* <Dropdown menu={{ items }} placement="topRight" arrow={{ pointAtCenter: true }}>
-      <Button>topRight</Button>
-    </Dropdown> */}
       </div>
     </header>
   );

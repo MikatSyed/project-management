@@ -17,7 +17,7 @@ interface IInput {
 
 const FormInput = ({name,
     type,
-    size,
+    size="large",
     value,
     id,
     placeholder,
@@ -30,7 +30,9 @@ const FormInput = ({name,
         const errorMessage = getErrorMessageByPropertyName(errors, name);
     return (
        <>
-       {label ? label : null}
+       {label ? <div className='block text-sm font-medium'>
+        {label}
+       </div> : null}
        <Controller
         control={control}
         name={name}
@@ -40,7 +42,7 @@ const FormInput = ({name,
             type={type}
             size={size}
             placeholder={placeholder}
-            className={`${className}`}
+            className={`${className} border-gray-300  border-gray-300 focus:border-teal-500 focus:ring-teal-500`}
             {...field}
             value={value ? value : field.value}
           />
@@ -49,7 +51,7 @@ const FormInput = ({name,
             type={type}
             size={size}
             placeholder={placeholder}
-            className={`${className}`}
+            className={`${className} border-gray-300  border-gray-300 focus:border-teal-500 focus:ring-teal-500`}
             {...field}
             value={value ? value : field.value}
           />

@@ -1,54 +1,50 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import { sidebarItems } from '@/app/constants/sidebarItems';
-import { FaHouseChimneyWindow } from 'react-icons/fa6';
-import { CgLogOut } from "react-icons/cg";
+import { FaTasks } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 const { Sider } = Layout;
 
 const SideBar = ({ collapsed, onCollapse }: { collapsed: boolean; onCollapse: () => void }) => {
-  
-  const logout = () => {
-    // Implement logout functionality here
-  }
+  const router = useRouter();
 
   return (
-    <div className="bg-gradient-to-r from-blue-900 to-blue-800">
-      <Sider
-        collapsed={collapsed}
-        onCollapse={onCollapse}
-        breakpoint="lg"
-        collapsedWidth={80}
-        width={260}
-        style={{ position: 'sticky', top: 0, bottom: 0 }}
-      >
-        <div className="py-5  px-7 bg-gradient-to-r from-blue-900 to-blue-800">
-          <a href="/">
-            {collapsed ? 
-              <h3 className="text-white text-xl"><FaHouseChimneyWindow/></h3> : 
-              <h3 className="text-white text-xl"><FaHouseChimneyWindow/> Project Wave</h3>
-            }
-          </a>
-        </div>
-        <Menu
-          defaultSelectedKeys={['1']}
-          mode="inline"
-          items={sidebarItems()}
-          className='text-[15px] bg-gradient-to-r from-blue-900 to-blue-800'
-          
-        />
-      </Sider>
+    <Sider
+      collapsed={collapsed}
+      onCollapse={onCollapse}
+      breakpoint="lg"
+      collapsedWidth={80}
+      width={260}
+      className="sticky top-0 bottom-0 bg-gradient-to-r from-teal-600 to-teal-500 text-white" 
+    >
+      <div className="py-5 px-7 flex items-center">
+        <a href="/" className="flex items-center text-white">
+          <FaTasks className="text-xl" />
+          {!collapsed && <h3 className="text-xl ml-3 font-semibold">TaskTrack</h3>}
+        </a>
+      </div>
 
-      {collapsed ? 
-        <div className=" p-8  cursor-pointer" onClick={logout}>
-          <p className="text-white text-lg"><CgLogOut/></p>
-        </div> 
-        :
-        <div className=" p-8 cursor-pointer " onClick={logout}>
-          <p className="text-white text-[15px]">Logout</p>
-        </div>
-      }
-    </div>
+      <Menu
+        defaultSelectedKeys={['1']}
+        mode="inline"
+        items={sidebarItems()}
+        className="text-sm text-black bg-transparent border-0"
+      />
+
+      {/* Uncomment and modify this logout button as needed */}
+      {/* 
+      <div 
+        className={`flex items-center justify-center cursor-pointer ${collapsed ? 'fixed bottom-5 left-1/2 transform -translate-x-1/2' : 'p-8 mt-auto'}`} 
+        onClick={logout}
+      >
+        <p className="text-white text-lg flex items-center">
+          <CgLogOut className="mr-2" />
+          {!collapsed && 'Logout'}
+        </p>
+      </div> 
+      */}
+    </Sider>
   );
 };
 

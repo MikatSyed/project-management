@@ -4,11 +4,7 @@ const nextConfig = {
   // ... other configurations
 
   // Proxy configuration for development
-  devServer: {
-    proxy: {
-      '/api': 'http://localhost:8000',
-    },
-  },
+  
 };
 
 export default nextConfig;
