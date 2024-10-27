@@ -15,7 +15,7 @@ const LayoutPage = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh' }} className='main'>
       <SideBar collapsed={collapsed} onCollapse={toggleSidebar} /> 
       <ContentPage collapsed={collapsed} onToggleSidebar={toggleSidebar}>{children}</ContentPage>
     </Layout>

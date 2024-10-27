@@ -38,88 +38,89 @@ const TaskList = ({ filteredTasks, onTaskAdded }: any) => {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-10">
-                    {paginatedTasks.map((task: any) => (
-                        <div
-                            key={task._id}
-                            className="bg-white rounded-2xl shadow-md border border-gray-100 p-4 relative transition-transform transform hover:-translate-y-2 hover:shadow-xl duration-300 ease-in-out"
-                        >
-                            {/* Task Title and Completion Toggle */}
-                            <div className="flex justify-between items-center mb-5">
-                                <div className="flex">
-                                    <h3 className="text-2xl font-bold text-gray-800">{task.title}</h3>
-                                    <div
-                                        className={`ml-4 mt-2 inline-block px-3 py-1 text-sm font-semibold rounded-full ${
-                                            task.status === 'To Do'
-                                                ? 'bg-blue-500 text-white'
-                                                : task.status === 'In Progress'
-                                                ? 'bg-yellow-500 text-white'
-                                                : task.status === 'Done'
-                                                ? 'bg-green-500 text-white'
-                                                : 'bg-gray-300 text-gray-700'
-                                        }`}
-                                    >
-                                        {task.status}
-                                    </div>
-                                </div>
-                                <div className="flex items-center">
-                                    {task.isCompleted ? (
-                                        <FaBookmark
-                                            size={28}
-                                            className="text-teal-600 cursor-pointer hover:text-teal-400"
-                                            onClick={() => toggleCompletion(task.id)}
-                                        />
-                                    ) : (
-                                        <BiBookmark
-                                            size={28}
-                                            className="text-teal-600 cursor-pointer hover:text-teal-400"
-                                            onClick={() => toggleCompletion(task.id)}
-                                        />
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Task Description */}
-                            <p className="text-gray-600 mb-6 text-lg leading-relaxed">{task.description}</p>
-
-                            {/* Member and Due Date Information */}
-                            <div className="flex items-center mb-3">
-                                <FiUser className="mr-2 text-gray-500" />
-                                <p className="text-lg text-gray-700 font-semibold">
-                                    Assign To: <span className="text-gray-600 font-normal">{task?.member}</span>
-                                </p>
-                            </div>
-                            <div className="flex items-center text-gray-600 mb-6">
-                                <FiClock className="mr-2 text-gray-500" />
-                                <p className="text-lg text-gray-700 font-semibold">
-                                    Due Date: <span className="text-gray-600 font-normal">
-                                        {new Date(task.dueDate).toLocaleDateString('en-US', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric',
-                                        })}
-                                    </span>
-                                </p>
-                            </div>
-
-                            {/* Action Buttons */}
-                            <div className="flex justify-end mt-5 space-x-3">
-                                <Link href={`/dashboard/project/task/${task.id}`}>
-                                    <button className="flex items-center justify-center rounded-lg bg-teal-600 text-white px-4 py-3 font-semibold border-none hover:bg-teal-500">
-                                        <BiEditAlt className="mr-1" />
-                                        Edit
-                                    </button>
-                                </Link>
-                                <button
-                                    className="flex items-center justify-center rounded-lg bg-red-600 text-white px-4 py-3 font-semibold border-none hover:bg-red-500"
-                                    onClick={() => deleteTask(task.id)}
+                {paginatedTasks.map((task: any) => (
+                    <div
+                        key={task._id}
+                        className="bg-white rounded-lg shadow-md border border-gray-100 p-4 relative hover:shadow-lg"
+                    >
+                        {/* Task Title and Completion Toggle */}
+                        <div className="flex flex-col sm:flex-row justify-between items-start mb-5">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center">
+                                <h3 className="text-xl sm:text-2xl font-bold text-gray-800">{task.title}</h3>
+                                <div
+                                    className={`ml-0 sm:ml-4 mt-2 inline-block ${
+                                        task.status === 'To Do'
+                                            ? 'bg-blue-500 text-white'
+                                            : task.status === 'In Progress'
+                                            ? 'bg-yellow-500 text-white'
+                                            : task.status === 'Done'
+                                            ? 'bg-green-500 text-white'
+                                            : 'bg-gray-300 text-gray-700'
+                                    } rounded-full text-xs sm:text-sm px-2 sm:px-3 py-1`}
                                 >
-                                    <MdDelete className="mr-1" />
-                                    Delete
-                                </button>
+                                    {task.status}
+                                </div>
+                            </div>
+                            <div className="flex items-center mt-2 sm:mt-0">
+                                {task.isCompleted ? (
+                                    <FaBookmark
+                                        size={28}
+                                        className="text-teal-600 cursor-pointer hover:text-teal-400"
+                                        onClick={() => toggleCompletion(task.id)}
+                                    />
+                                ) : (
+                                    <BiBookmark
+                                        size={28}
+                                        className="text-teal-600 cursor-pointer hover:text-teal-400"
+                                        onClick={() => toggleCompletion(task.id)}
+                                    />
+                                )}
                             </div>
                         </div>
-                    ))}
-                </div>
+            
+                        {/* Task Description */}
+                        <p className="text-gray-600 mb-6 text-base leading-relaxed">{task.description}</p>
+            
+                        {/* Member and Due Date Information */}
+                        <div>
+                            <p className="text-base text-gray-700 font-semibold flex items-center mb-3">
+                                <FiUser className="mr-2 text-gray-600" />
+                                Assign To: <span className="text-gray-600 font-normal ml-2">{task?.member}</span>
+                            </p>
+                        </div>
+                        <div className="mb-6">
+                            <p className="text-base text-gray-700 font-semibold flex items-center mb-3">
+                                <FiClock className="mr-2 text-gray-600" />
+                                Due Date: <span className="text-gray-600 font-normal ml-2">
+                                    {new Date(task.dueDate).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                    })}
+                                </span>
+                            </p>
+                        </div>
+            
+                        <div className="flex justify-end space-x-3">
+                            <Link href={`/dashboard/project/task/${task.id}`}>
+                                <button className="flex items-center justify-center rounded-lg bg-teal-600 text-white px-3 py-2 text-sm font-semibold border-none hover:bg-teal-500">
+                                    <BiEditAlt className="mr-1" />
+                                    Edit
+                                </button>
+                            </Link>
+                            <button
+                                className="flex items-center justify-center rounded-lg bg-red-600 text-white px-3 py-2 text-sm font-semibold border-none hover:bg-red-500"
+                                onClick={() => deleteTask(task.id)}
+                            >
+                                <MdDelete className="mr-1" />
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            
+            
             )}
 
             {/* Pagination Controls */}

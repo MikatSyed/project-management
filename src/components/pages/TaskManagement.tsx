@@ -28,7 +28,6 @@ const TaskManagement = ({ tasks, onTaskAdded }: any) => {
   const [draggedCard, setDraggedCard] = useState<Card | null>(null);
 
   useEffect(() => {
-    // Initialize columns from tasks on mount or when tasks change
     const initializeColumns = () => {
       const initialColumns: Column[] = [
         {
@@ -55,14 +54,14 @@ const TaskManagement = ({ tasks, onTaskAdded }: any) => {
       ];
       setColumns(initialColumns);
     };
-    
+
     initializeColumns();
   }, [tasks]);
 
   const handleDeleteCard = (cardId: string) => {
     const taskId = parseInt(cardId.replace("card", ""));
     deleteTask(taskId);
-    onTaskAdded()
+    onTaskAdded();
     setColumns(columns.map(column => ({
       ...column,
       cards: column.cards.filter(card => card.id !== cardId),
@@ -77,33 +76,26 @@ const TaskManagement = ({ tasks, onTaskAdded }: any) => {
     event.preventDefault();
     if (draggedCard) {
       const taskId = parseInt(draggedCard.id.replace("card", ""));
-      
-      // Update the task status in the store
       updateTaskStatus(taskId, targetColumnId as 'To Do' | 'In Progress' | 'Done');
-      onTaskAdded()
+      onTaskAdded();
 
-      // Create a new state for updated columns
       const updatedColumns = columns.map((column) => {
-        // If the column is the one the card was dragged from, remove the card
         if (column.cards.some(card => card.id === draggedCard.id)) {
           return {
             ...column,
             cards: column.cards.filter((card) => card.id !== draggedCard.id),
           };
-        } 
-        // If the column is the target column, add the card
-        else if (column.id === targetColumnId) {
+        } else if (column.id === targetColumnId) {
           return {
             ...column,
             cards: [...column.cards, draggedCard],
           };
         }
-        return column; // return other columns as they are
+        return column; 
       });
 
-      // Update the state with the new columns
       setColumns(updatedColumns);
-      setDraggedCard(null); // Reset dragged card state
+      setDraggedCard(null); 
     }
   };
 
@@ -114,47 +106,45 @@ const TaskManagement = ({ tasks, onTaskAdded }: any) => {
   return (
     <>
       <h2 className="text-3xl font-bold mb-8 text-gray-800">Drag and Drop</h2>
-      <div className="flex justify-start">
-        <div className="flex flex-row space-x-4 ">
-          {columns.map((column) => (
-            <div
-              key={column.id}
-              className="flex flex-col bg-gradient-to-r from-teal-600 to-teal-500 text-white p-4 rounded-md w-[18rem]"
-              onDrop={(e) => handleDrop(e, column.id)}
-              onDragOver={handleDragOver}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold">{column.title}</h2>
-                <HiDotsHorizontal className="text-gray-500 cursor-pointer" />
-              </div>
-              <div className="flex flex-col gap-2">
-                {column.cards.map((card) => (
-                  <div
-                    key={card.id}
-                    className={`flex justify-between items-center bg-white rounded-md p-2 shadow-md cursor-move ${
-                      draggedCard?.id === card.id ? "opacity-40" : ""
-                    }`}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, card)}
-                  >
-                    <div className="w-full text-left py-2 px-4 font-semibold text-gray-700">
-                      {card.text}
-                    </div>
-                    <CgClose
-                      className="text-red-500 cursor-pointer"
-                      onClick={() => handleDeleteCard(card.id)}
-                    />
-                  </div>
-                ))}
-                {column.cards.length === 0 && (
-                  <div className="h-16 flex items-center justify-center border border-dashed border-gray-300 rounded-md">
-                    Drop here
-                  </div>
-                )}
-              </div>
+      <div className="flex flex-col sm:flex-row sm:justify-start sm:space-x-4">
+        {columns.map((column) => (
+          <div
+            key={column.id}
+            className="flex flex-col bg-gradient-to-r from-teal-600 to-teal-500 text-white p-4 rounded-md w-full sm:w-[18rem] mb-4 sm:mb-0"
+            onDrop={(e) => handleDrop(e, column.id)}
+            onDragOver={handleDragOver}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-bold">{column.title}</h2>
+             
             </div>
-          ))}
-        </div>
+            <div className="flex flex-col gap-2">
+              {column.cards.map((card) => (
+                <div
+                  key={card.id}
+                  className={`flex justify-between items-center bg-white rounded-md p-2 shadow-md cursor-move ${
+                    draggedCard?.id === card.id ? "opacity-40" : ""
+                  }`}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, card)}
+                >
+                  <div className="w-full text-left py-2 px-4 font-semibold text-gray-700">
+                    {card.text}
+                  </div>
+                  <CgClose
+                    className="text-red-500 cursor-pointer"
+                    onClick={() => handleDeleteCard(card.id)}
+                  />
+                </div>
+              ))}
+              {column.cards.length === 0 && (
+                <div className="h-16 flex items-center justify-center border border-dashed border-gray-300 rounded-md">
+                  Drop here
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </>
   );

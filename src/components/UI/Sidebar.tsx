@@ -16,7 +16,7 @@ const SideBar = ({ collapsed, onCollapse }: { collapsed: boolean; onCollapse: ()
       breakpoint="lg"
       collapsedWidth={80}
       width={260}
-      className="sticky top-0 bottom-0 bg-gradient-to-r from-teal-600 to-teal-500 text-white" 
+      className="sticky top-0 bottom-0 bg-gradient-to-r from-teal-600 to-teal-500 text-white h-screen overflow-hidden" // Set height to full screen and hide overflow
     >
       <div className="py-5 px-7 flex items-center">
         <a href="/" className="flex items-center text-white">

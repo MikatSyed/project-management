@@ -15,7 +15,6 @@ const Login = () => {
     try {
       // Mock login functionality
       if (values.email === "test@gmail.com" && values.password === "test123") {
-       
         router.push("/dashboard/project");
       } else {
         // Invalid credentials
@@ -40,16 +39,20 @@ const Login = () => {
   return (
     <>
       <Toaster position="bottom-right" reverseOrder={false} />
-      <div className=" absolute top-0 left-0 bottom-0 leading-5 h-full w-full overflow-hidden" />
+      <div className="absolute top-0 left-0 bottom-0 leading-5 h-full w-full overflow-hidden" />
       <div className="relative min-h-screen flex flex-col sm:flex-row justify-center items-center bg-transparent rounded-3xl shadow-xl">
-       
+    
+      
         <div className="flex justify-center self-center z-10 mt-5">
-          <div className="p-12 bg-white mx-auto rounded-3xl w-96 shadow-lg transition-shadow duration-300 hover:shadow-2xl">
-            <h3 className="font-semibold text-2xl text-gray-800 mb-5">Login In</h3>
-            <p className="text-gray-400 mb-5">
-              Don't have an account?
-              <a href="#" className="text-sm text-blue-700 hover:underline ml-1">Sign Up</a>
-            </p>
+          <div className="p-12 bg-white mx-auto rounded-3xl w-96 shadow-md transition-shadow duration-300 hover:shadow-lg">
+         
+          <h2 className="text-3xl font-bold text-teal-600  text-center">
+  Task Tracker
+</h2>
+
+            <h3 className="font-semibold text-lg text-gray-800 my-5">Login In</h3>
+        
+            
             <Form submitHandler={onSubmit} defaultValues={defaultValues}>
               <FormInput
                 name="email"
@@ -74,13 +77,13 @@ const Login = () => {
               </div>
               <button
                 type="submit"
-                className="w-full mt-5 flex justify-center bg-[#008080] hover:bg-[#00B3B3] text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500 border-none"
+                className="w-full mt-5 flex justify-center bg-teal-600 hover:bg-teal-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500 border-none"
               >
                 Login
               </button>
             </Form>
             <div className="flex items-center justify-between mt-3">
-              
+           
             </div>
           </div>
         </div>

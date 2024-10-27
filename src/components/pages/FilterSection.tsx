@@ -1,4 +1,5 @@
 import React from 'react';
+import { MdRefresh } from 'react-icons/md';
 
 const FilterSection = ({
     statusFilter,
@@ -8,19 +9,31 @@ const FilterSection = ({
     setSearchQuery,
     setStatusFilter,
     setDueDateFilter,
-    setAssigneeFilter
+    setAssigneeFilter,
+    onResetFilters // Added the onResetFilters prop
 }: any) => {
     return (
-        <div className="bg-gradient-to-r from-teal-600 to-teal-500 rounded-lg shadow-lg p-6 mb-6">
-            <h2 className="text-lg font-semibold mb-4 text-white">Filters</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-gradient-to-r from-teal-600 to-teal-500 rounded-lg shadow-lg p-8 mb-8">
+           <div className='flex justify-between' >
+           <div><h2 className="text-lg font-semibold mb-5 text-white">Filters</h2></div>
+           <div >
+           <button
+                    className="flex items-center justify-center bg-white border-none text-teal-500 font-semibold py-2 px-4 rounded-md shadow cursor-pointer "
+                    onClick={onResetFilters} 
+                >
+                    <MdRefresh size={20} className="mr-2" />
+                    
+                </button>
+            </div>
+           </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Status filter */}
                 <div>
-                    <label htmlFor="status" className="block text-sm font-medium text-white mb-1">Status</label>
+                    <label htmlFor="status" className="block text-sm font-medium text-white mb-2">Status</label>
                     <select
                         id="status"
                         name="status"
-                        className="block w-full h-11 py-3 px-4 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-500 sm:text-sm transition duration-200 ease-in-out"
+                        className="block w-full h-12 py-3 px-4 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-500 sm:text-sm transition duration-200 ease-in-out"
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
@@ -33,12 +46,12 @@ const FilterSection = ({
 
                 {/* Due Date filter */}
                 <div>
-                    <label htmlFor="dueDate" className="block text-sm font-medium text-white mb-1">Due Date</label>
+                    <label htmlFor="dueDate" className="block text-sm font-medium text-white mb-2">Due Date</label>
                     <input
                         type="date"
                         id="dueDate"
                         name="dueDate"
-                        className="block w-full h-11 py-3 px-4 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-500 sm:text-sm transition duration-200 ease-in-out"
+                        className="block w-full h-12 py-3 px-4 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-500 sm:text-sm transition duration-200 ease-in-out"
                         value={dueDateFilter}
                         onChange={(e) => setDueDateFilter(e.target.value)}
                     />
@@ -46,11 +59,11 @@ const FilterSection = ({
 
                 {/* Assignee filter */}
                 <div>
-                    <label htmlFor="assignee" className="block text-sm font-medium text-white mb-1">Assignee</label>
+                    <label htmlFor="assignee" className="block text-sm font-medium text-white mb-2">Assignee</label>
                     <select
                         id="assignee"
                         name="assignee"
-                        className="block w-full h-11 py-3 px-4 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-500 sm:text-sm transition duration-200 ease-in-out"
+                        className="block w-full h-12 py-3 px-4 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-500 sm:text-sm transition duration-200 ease-in-out"
                         value={assigneeFilter}
                         onChange={(e) => setAssigneeFilter(e.target.value)}
                     >
@@ -61,6 +74,8 @@ const FilterSection = ({
                     </select>
                 </div>
             </div>
+        
+          
         </div>
     );
 };

@@ -37,8 +37,10 @@ interface TaskState {
   getTasksByStatus: (status: TaskStatus) => Task[];
 }
 
+// Function to get the next ID for new tasks
 const getNextId = (tasks: Task[]) => tasks.reduce((max, task) => Math.max(max, task.id), 0) + 1;
 
+// Check if local storage is available
 const isLocalStorageAvailable = (): boolean => {
   try {
     return 'localStorage' in window && window.localStorage !== null;
@@ -47,6 +49,7 @@ const isLocalStorageAvailable = (): boolean => {
   }
 };
 
+// Load data from local storage with a fallback option
 export const loadFromLocalStorage = <T>(key: string, fallback: T): T => {
   try {
     const item = window.localStorage.getItem(key);
@@ -57,6 +60,7 @@ export const loadFromLocalStorage = <T>(key: string, fallback: T): T => {
   }
 };
 
+// Save data to local storage
 const saveToLocalStorage = <T>(key: string, data: T) => {
   try {
     window.localStorage.setItem(key, JSON.stringify(data));
@@ -65,6 +69,7 @@ const saveToLocalStorage = <T>(key: string, data: T) => {
   }
 };
 
+// Create Zustand store
 export const useTaskStore = create<TaskState>()(
   immer((set, get) => {
     // Load initial state from localStorage once
@@ -75,6 +80,7 @@ export const useTaskStore = create<TaskState>()(
       tasks: initialTasks,
       projects: initialProjects,
 
+      // Add a new task
       addTask: (newTask) => set((state) => {
         const id = getNextId(state.tasks);
         const updatedTask = { ...newTask, id };
@@ -83,17 +89,20 @@ export const useTaskStore = create<TaskState>()(
         state.tasks = updatedTasks; // Update state
       }),
 
+      // Delete a project
       deleteProject: (projectId) => set((state) => {
         const updatedProjects = state.projects.filter((project) => project.id !== projectId);
         saveToLocalStorage('projects', updatedProjects); // Save to localStorage after updating
         state.projects = updatedProjects; // Update state
       }),
 
+      // Set new projects
       setProjects: (newProjects) => {
         saveToLocalStorage('projects', newProjects); // Save to localStorage
         set({ projects: newProjects }); // Update state
       },
 
+      // Update a task
       updateTask: (taskId, updatedTask) => set((state) => {
         const updatedTasks = state.tasks.map((task) =>
           task.id === taskId ? { ...task, ...updatedTask } : task
@@ -102,6 +111,7 @@ export const useTaskStore = create<TaskState>()(
         state.tasks = updatedTasks; // Update state
       }),
 
+      // Toggle task completion status
       toggleIsComplete: (taskId) => set((state) => {
         const updatedTasks = state.tasks.map((task) =>
           task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
@@ -110,6 +120,7 @@ export const useTaskStore = create<TaskState>()(
         state.tasks = updatedTasks; // Update state
       }),
 
+      // Update task status
       updateTaskStatus: (taskId, newStatus) => set((state) => {
         const updatedTasks = state.tasks.map((task) =>
           task.id === taskId ? { ...task, status: newStatus } : task
@@ -118,12 +129,14 @@ export const useTaskStore = create<TaskState>()(
         state.tasks = updatedTasks; // Update state
       }),
 
+      // Delete a task
       deleteTask: (taskId) => set((state) => {
         const updatedTasks = state.tasks.filter((task) => task.id !== taskId);
         saveToLocalStorage('tasks', updatedTasks); // Save to localStorage after updating
         state.tasks = updatedTasks; // Update state
       }),
 
+      // Get tasks by status
       getTasksByStatus: (status) => get().tasks.filter((task) => task.status === status),
     };
   })

@@ -1,6 +1,7 @@
 import React from 'react';
 import { MdOutlineLegendToggle } from "react-icons/md";
 import { Avatar, Button, Dropdown, Menu } from 'antd';
+import Link from 'next/link';
 
 const HeaderPage = ({ collapsed, onToggleSidebar }: any) => {
   const logout = () => {
@@ -34,12 +35,12 @@ const HeaderPage = ({ collapsed, onToggleSidebar }: any) => {
       </div>
       <div className="flex items-center">
         
-      <button 
+  <Link href="/">    <button 
   onClick={logout} 
   className="py-3 px-6 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg border-none "
 >
   Logout
-</button>
+</button></Link>
 
       </div>
     </header>

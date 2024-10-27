@@ -1,70 +1,28 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "antd";
 import Link from "next/link";
-import { DeleteOutlined, ReloadOutlined } from "@ant-design/icons";
-import UMTable from "@/components/UI/Table"; // Assuming this is your custom table component
-import ActionBar from "@/components/UI/ActionBar"; // Your action bar component
+import { ReloadOutlined } from "@ant-design/icons";
+import UMTable from "@/components/UI/Table"; 
+import ActionBar from "@/components/UI/ActionBar"; 
 import { BsEyeFill } from "react-icons/bs";
 import { useTaskStore } from "@/stores/taskStore";
+import { useRouter } from "next/navigation";
+import { projectData, projectPhases } from "@/utils/data";
+
+
 
 const ProjectPage = () => {
+  const {push} = useRouter();
   const [page, setPage] = useState<number>(1);
   const [size, setSize] = useState<number>(10);
   const [sortBy, setSortBy] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
-  const { setProjects } = useTaskStore();
-  const projects = useTaskStore((state) => state.projects);
-  const { deleteProject }: any = useTaskStore();
 
-  // Simulated JSON data
-  const demoProjects:any = [
-    {
-      id: "1",
-      title: "Project Alpha",
-      description: "Description of Project Alpha",
-      status: "In Progress",
-      created_at: "2023-10-01T12:00:00Z",
-      updated_at: "2023-10-15T12:00:00Z",
-    },
-    {
-      id: "2",
-      title: "Project Beta",
-      description: "Description of Project Beta",
-      status: "Completed",
-      created_at: "2023-09-10T12:00:00Z",
-      updated_at: "2023-09-20T12:00:00Z",
-    },
-    {
-      id: "3",
-      title: "Project Gamma",
-      description: "Description of Project Gamma",
-      status: "Pending",
-      created_at: "2023-08-05T12:00:00Z",
-      updated_at: "2023-08-10T12:00:00Z",
-    },
-  ];
+  const addTask = useTaskStore((state) => state.addTask);
+  const tasks = useTaskStore((state) => state.tasks);
 
-  // Simulate fetching data (you could replace this with an API call)
-  useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setProjects(demoProjects); // Set the demo data to the store
-      setLoading(false);
-    }, 1000);
-  }, [setProjects]);
-
-  const deleteHandler = async (id: string) => {
-    try {
-      deleteProject(id);
-      // Optionally add a toast notification for successful deletion
-    } catch (err: any) {
-      console.error(err.message);
-    }
-  };
-
+ 
   const columns = [
     {
       title: "Title",
@@ -72,17 +30,15 @@ const ProjectPage = () => {
     },
     {
       title: "Action",
-      render: (data: any) => {
-        return (
-          <>
-            <Link href={`project/view/${data?.id}`}>
-              <Button className="bg-[#008080] hover:bg-[#007474] text-white" style={{ margin: "0px 5px" }}>
-                <BsEyeFill />
-              </Button>
-            </Link>
-          </>
-        );
-      },
+      render: (data: any) => (
+        <Button
+          onClick={() => handleAddProjectPhases(data.id)}
+          className="bg-[#008080] hover:bg-[#007474] text-white"
+          style={{ margin: "0px 5px" }}
+        >
+          <BsEyeFill />
+        </Button>
+      ),
     },
   ];
 
@@ -100,7 +56,34 @@ const ProjectPage = () => {
   const resetFilters = () => {
     setSortBy("");
     setSortOrder("");
-    setSearchTerm("");
+  };
+
+  // Handler for adding project phases when clicking the eye icon
+  const handleAddProjectPhases = async (projectId: string) => {
+    const isFirstVisit = !localStorage.getItem(`projectPhasesAdded_${projectId}`);
+
+    if (isFirstVisit && projectId) {
+      // Use projectId to define the desired serviceId
+      const desiredServiceId = projectId; // This assumes projectId directly corresponds to serviceId
+    
+      for (const phase of projectPhases) {
+        // Check if the phase's serviceId matches the desiredServiceId and if a task already exists
+        const taskExists = tasks.some((task: any) => task.id === phase.id);
+        if (!taskExists && phase.serviceId === desiredServiceId) {
+          await addTask(phase as any); // Add the phase as a task if it does not already exist
+        }
+      }
+    
+      // Mark that the project phases were added for this projectId
+      localStorage.setItem(`projectPhasesAdded_${projectId}`, "true"); 
+      // Redirect to the project view
+      push(`/dashboard/project/view/${projectId}`);
+    } else {
+      // Redirect to the project view if not the first visit or projectId is not set
+      push(`/dashboard/project/view/${projectId}`);
+    }
+    
+   
   };
 
   return (
@@ -117,13 +100,12 @@ const ProjectPage = () => {
       </div>
 
       <UMTable
-        dataSource={projects}
+        dataSource={projectData?.projects}
         columns={columns}
-        loading={loading} // Use the loading state
         onTableChange={onTableChange}
         onPaginationChange={onPaginationChange}
         pageSize={size}
-        totalPages={projects.length} // Set total number of projects (for demo, this is the length of the array)
+        totalPages={projectData?.projects.length}
         showSizeChanger={true}
         showPagination={true}
         scroll={true}
